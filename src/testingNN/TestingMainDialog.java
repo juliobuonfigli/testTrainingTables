@@ -24,7 +24,7 @@ public class TestingMainDialog extends JFrame implements ActionListener {
 
 	 private JTextField  cEntradas, cSalidas, cFilas;
 	 private JLabel eEntradas, eSalidas, eFuente, eRed, eFilas, et1, et2, et3;
-	 private int  Porcentaje, Entradas, Salidas, Filas;
+	 private int Porcentaje, Entradas, Salidas, Filas;
 	 private JButton bFuente, bAceptar, bRed;
 	 private File fF, nn;
 	 private Reader rF;
@@ -107,79 +107,80 @@ public File setArchivo(String titulo, JLabel jl)
 @Override
 public void actionPerformed(ActionEvent e) 
 		{
-     if(e.getSource()==bFuente)
+	    if(e.getSource()==bFuente)
 			{
 			fF=setArchivo("Cargar CSV fuente", et1);
-			try {
-	            rF = new FileReader(fF); 
-	            //wD = new FileWriter(fF); 
+			try{
+		         rF = new FileReader(fF); 
+		         //wD = new FileWriter(fF); 
 				}
 	        catch(IOException c) {
 	            System.out.println(c.getMessage()); }
 			}
-	if(e.getSource()==bRed) 
+		if(e.getSource()==bRed) 
 			{
 			nn=setArchivo("Cargar Red Neuronal", et3);
 			NN = NeuralNetwork.createFromFile(nn);
 			}
-		
-     if(e.getSource()==bAceptar) 
-		{
-     	Entradas=Integer.parseInt(cEntradas.getText());
-     	Salidas=Integer.parseInt(cSalidas.getText());
-     	Filas=Integer.parseInt(cFilas.getText());
-     	crF=new CSVReader(rF);
-     	String[][] SM=new String[Filas][Entradas+Salidas];
-     	double[][] DM=new double[Filas][Entradas+Salidas];
-     	String[] SA=new String[Entradas+2*Salidas];
-     	double[][] ent=new double[Filas][Entradas];
-     	double[] sal=new double[Salidas];
-     	for(int j=0; j<Filas; j++)
-     		{
-     		try{
-     			SM[j]=crF.readNext();}
-     		catch(IOException c) {
-     			System.out.println(c.getMessage()); }
-     		for(int i=0; i<Entradas+Salidas; i++)
-     			DM[j][i]=Double.parseDouble(SM[j][i]);
-     		for(int i=0; i<Entradas; i++)
-     			ent[j][i]=DM[j][i];
-     		}
-     	try{
- 			crF.close();}
- 		catch(IOException c) {
- 			System.out.println(c.getMessage()); }
-     	cwD=new CSVWriter(wD);
-     	try{
-     		wD = new FileWriter(fF); }
-        catch(IOException c) {
-            System.out.println(c.getMessage()); }
-     	for(int j=0; j<Filas; j++)
-     		{
-     		for(int i=0; i<Entradas+Salidas; i++)
-     			SA[i]=SM[j][i];
-     		NN.setInput(ent[j]);
-    		NN.calculate();
-    		sal=NN.getOutput();
-    		int x=0;
-    		for(int i=Entradas+Salidas; i<Entradas+2*Salidas; i++)
-    			{
-    			SA[i]=Double.toString(sal[x]);
-    			System.out.println(sal[x]);
-    			x++;
-    			}
-    		try{
-     			cwD.writeNext(SA); }
-	    	catch(Exception ee) {
-	    		System.out.println("...esto no camina"); }
-     		}
-            try{
-     		cwD.close();}
-		    catch(Exception ee) {
-		    	System.out.println("...no funka"); }
-     	flag=true;
-     	System.exit(0);
-        }
+		if(e.getSource()==bAceptar) 
+			{
+	     	Entradas=Integer.parseInt(cEntradas.getText());
+	     	Salidas=Integer.parseInt(cSalidas.getText());
+	     	Filas=Integer.parseInt(cFilas.getText());
+	     	crF=new CSVReader(rF);
+	     	String[][] SM=new String[Filas][Entradas+Salidas];
+	     	double[][] DM=new double[Filas][Entradas+Salidas];
+	     	String[] SA=new String[Entradas+2*Salidas];
+	     	double[][] ent=new double[Filas][Entradas];
+	     	double[] sal=new double[Salidas];
+	     	for(int j=0; j<Filas; j++)
+	     		{
+	     		try{
+	     			SM[j]=crF.readNext();}
+	     		catch(IOException c) {
+	     			System.out.println(c.getMessage()); }
+	     		for(int i=0; i<Entradas+Salidas; i++)
+	     			DM[j][i]=Double.parseDouble(SM[j][i]);
+	     		for(int i=0; i<Entradas; i++)
+	     			ent[j][i]=DM[j][i];
+	     		}
+	     	try{
+	 			crF.close();}
+	 		catch(IOException c) {
+	 			System.out.println(c.getMessage()); }
+	     	try{
+	     		wD = new FileWriter(fF); }
+	        catch(IOException c) {
+	            System.out.println(c.getMessage()); }
+	     	cwD=new CSVWriter(wD);
+	     	for(int j=0; j<Filas; j++)
+	     		{
+	     		for(int i=0; i<Entradas+Salidas; i++)
+	     			SA[i]=SM[j][i];
+	     		NN.setInput(ent[j]);
+	    		NN.calculate();
+	    		sal=NN.getOutput();
+	    		int x=0;
+	    		for(int i=Entradas+Salidas; i<Entradas+2*Salidas; i++)
+	    			{
+	    			SA[i]=Double.toString(sal[x]);
+	    			/*for(int h=0;  h<Entradas; h++)
+	    				System.out.println(ent[j][h]);
+	    			System.out.println(sal[x]);*/
+	    			x++;
+	    			}
+	    		try{
+	     			cwD.writeNext(SA); }
+		    	catch(Exception ee) {
+		    		System.out.println("...esto no camina"); }
+	     		}
+	            try{
+	     		cwD.close();}
+			    catch(Exception ee) {
+			    	System.out.println("...no funka"); }
+	     	flag=true;
+	     	System.exit(0);
+	        }
      }
 }
 
